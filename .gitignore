@@ -1,0 +1,5 @@
+db.sqlite3
+geckodriveer.log
+.DS_Store
+__pycache__
+*.pyc
