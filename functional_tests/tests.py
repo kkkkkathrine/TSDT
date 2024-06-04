@@ -97,3 +97,21 @@ class NewVisitorTest(LiveServerTestCase):
 
         self.fail('Finish the test!')
 
+    def test_layout_and_styling(self):
+        # 张三访问首页
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024,768)
+
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+
+        # 他新建一个清单，看到输入框仍然完美的剧中显示
+        inputbox.send_keys('testing')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: testing')
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=10
+        )
+
