@@ -4,9 +4,15 @@ import unittest
 from selenium import webdriver
 from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from django.test import LiveServerTestCase
 
 browser = webdriver.Chrome()
 
+class NewVisitorTest(LiveServerTestCase):
+    def test_can_start_a_list_and_retrieve_it_later(self):
+        # 张三听说有一个在线待办事项的应用
+        # 他去看了这个应用的首页
+        self.browser.get(self.live_server_url)
 
 class NewVisitorTest(unittest.TestCase):
 
@@ -63,5 +69,4 @@ class NewVisitorTest(unittest.TestCase):
         # 他访问那个URL，发现他的待办事项列表还在
         # 他满意的离开了
         self.fail('Finish the test!')
-if __name__ == '__main__':
-        unittest.main()
+
