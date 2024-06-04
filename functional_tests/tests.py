@@ -61,9 +61,39 @@ class NewVisitorTest(LiveServerTestCase):
         # 页面再次更新，她的清单中显示了这两个待办事项
         self.check_for_row_in_list_table('1: Buy flowers')
         self.check_for_row_in_list_table('2: Give a gift to Lisi')
+
+        # 他满意的离开了
+
+    def test_multiple_users_can_start_lists_at_fifferent_urls(self):
+        # 张三新建一个待办事项清单
+        self.browser.get(self.live_server_url)
+        inputbox = self.browser.find_element(By.ID, 'id_new_item')
+        inputbox.send_keys('Buy flowers')
+        inputbox.send_keys(Keys.ENTER)
+        self.wait_for_row_in_list_table('1: Buy flowers')
+
+        # 他注意到清单有个唯一的URL
+        zhangsan_list_url = self.browser.current_url
+        self.assertRegex(zhangsan_list_url, '/lists/.+')
+
+        # 现在一个新用户王五访问网站
+        # 我们使用一个新浏览器会话
+        # 确保张三的信息不会从cookie中泄露出去
+        self.browser.quit()
+        self.browser = webdriver.Chrome()
+
+        #  王五访问首页
+        # 页面中看不到张三的清单
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
+        self.assertNotIn('Buy flowers', page_text)
+        self.assertIn('Buy milk', page_text)
+
+        # 两个人都很满意，然后去睡觉了
         # 张三想知道这个网站是否会记住他的清单
         # 他看到网站为他生成了一个唯一的URL
         # 他访问那个URL，发现他的待办事项列表还在
-        # 他满意的离开了
+
+
         self.fail('Finish the test!')
 
